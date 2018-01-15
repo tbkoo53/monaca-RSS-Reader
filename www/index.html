@@ -1,0 +1,115 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta http-equiv="Content-Security-Policy" content="default-src * data: gap: https://ssl.gstatic.com; style-src * 'unsafe-inline'; script-src * 'unsafe-inline' 'unsafe-eval'">
+  <script src="components/loader.js"></script>
+  <script src="lib/onsenui/js/onsenui.min.js"></script>
+
+  <link rel="stylesheet" href="components/loader.css">
+  <link rel="stylesheet" href="lib/onsenui/css/onsenui.css">
+  <link rel="stylesheet" href="lib/onsenui/css/onsen-css-components.css">
+  <link rel="stylesheet" href="css/style.css">
+
+  <link rel="stylesheet" href="css/favorite.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+  <script src="js/feed-reader.js"></script>
+  <script src="js/favorite-online.js"></script>
+  <script>
+//    ons.ready(function() {
+//      console.log("Onsen UI is ready!");
+//    });
+//
+//    document.addEventListener('show', function(event) {
+//      var page = event.target;
+//      var titleElement = document.querySelector('#toolbar-title');
+//
+//      if (page.matches('#first-page')) {
+//        titleElement.innerHTML = 'RSS';
+//      } else if (page.matches('#second-page')) {
+//        titleElement.innerHTML = 'Monaca';
+//      }
+//    });
+  </script>
+  
+  <!--open Monaca-->
+  <script>
+    ons.ready(function() {
+        var application_key = "8fe090dd613e95e6413472cf7700723ed100c65ea6991503e85a7f778dc50732";
+        var client_key      = "163e2a88c844641d1a78bfc8961be4833c0cf7b6ccd07eb06d6cf95ec923f121";
+        
+        var feedUrl = typeof window.cordova == "undefined" ? "./rss.xml" : "https://news.yahoo.co.jp/pickup/computer/rss.xml";
+        // お気に入りクラスを定義します
+        // 内容は www/js/favorite-online.js になります
+        var favorite = new Favorite({
+            applicationKey: application_key,
+            clientKey: client_key
+        });
+    
+        var feed = new Feed({
+            url: feedUrl,      // カンマの追加を忘れずに
+            favorite: favorite // 追加
+        });
+            
+        if (monaca.isIOS) {
+//            $('.toolbar').css('margin-top', '20px');
+            $('.button').css('top', '20px');
+        }
+        
+        $('.button').click(function() {
+          console.log('Reload.');
+//          feed.load();
+        });
+        
+        $('#feed-list').click(function() {
+          feed.load();
+        });
+        
+        feed.load();
+        
+    });
+    
+    function openMonaca(){
+      window.open("https://ja.monaca.io/", '_system');
+      return false;
+    }
+
+
+  </script>
+</head>
+<body>
+  <ons-page>
+    <ons-toolbar>
+      <div class="center" id="toolbar-title"></div>
+    </ons-toolbar>
+    <ons-tabbar position="auto">
+      <ons-tab label="RSS" page="rss.html" active>
+      </ons-tab>
+      <ons-tab label="Monaca" onclick="openMonaca();">
+      </ons-tab>
+    </ons-tabbar>
+  </ons-page>
+
+  <ons-template id="rss.html">
+    <ons-page id="first-page">
+      <div id="mask">
+        <div id="loading"><img src="loading.gif" alt="Loading ..." /></div>
+      </div>
+      
+      <ul>
+        <li id="feed-list"></li>
+      </ul>
+      <div id="btn_wrap">
+        <ons-button class="button">Reload</ons-button>
+      </div>
+      <p id="error-message"></p>
+    </ons-page>
+  </ons-template>
+
+  <ons-template id="tab2.html">
+    <ons-page id="second-page">
+    </ons-page>
+  </ons-template>
+</body>
+</html>
